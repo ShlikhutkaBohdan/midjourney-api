@@ -17,6 +17,8 @@ export const Commands = [
   "stealth",
   "shorten",
   "subscribe",
+// Additional commands
+  "swapid"
 ] as const;
 export type CommandName = (typeof Commands)[number];
 function getCommandName(name: string): CommandName | undefined {
@@ -130,6 +132,34 @@ export class Command {
     const data = await this.commandData("settings");
     return this.data2Paylod(data, nonce);
   }
+
+
+  async swapId0Payload(idName: string, image: DiscordImage, nonce?: string) {
+    const data = await this.commandData(
+        "swapid",
+        [
+          {
+            type:3,
+            name:"idname",
+            value: idName
+          },
+          {
+            type:11,
+            name:"image",
+            value: image.id,
+          }
+        ],
+        [
+          {
+            id: <string>image.id,
+            filename: image.filename,
+            uploaded_filename: image.upload_filename,
+          },
+        ],
+    );
+    return this.data2Paylod(data, nonce);
+  }
+
   async describePayload(image: DiscordImage, nonce?: string) {
     const data = await this.commandData(
       "describe",

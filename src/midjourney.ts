@@ -83,6 +83,33 @@ export class Midjourney extends MidjourneyMessage {
       return msg;
     }
   }
+
+  async SwapId(idName: string, imageUri: string, loading?: LoadingHandler) {
+    if (!this.config.Ws) {
+      const seed = random(1000000000, 9999999999);
+    } else {
+      await this.getWsClient();
+    }
+
+    const nonce = nextNonce();
+    const DcImage = await this.MJApi.UploadImageByUri(imageUri);
+    // const DcImage = {id: 2, filename: "medeya_honey_The_girl_in_the_jungle_3d612d2d-52f6-4db9-9941-e49766fccf7c.png", upload_filename: "2b3062f9-4a11-4496-8ee5-9521e789bdd0/medeya_honey_The_girl_in_the_jungle_3d612d2d-52f6-4db9-9941-e49766fccf7c.png"}
+    this.log(`Describe`, DcImage);
+    this.log(`IdName`, idName, "imageUri", imageUri, "nonce", nonce);
+    const httpStatus = await this.MJApi.SwapId0Api(idName, DcImage, nonce);
+    if (httpStatus !== 204) {
+      throw new Error(`SwapID failed with status ${httpStatus}`);
+    }
+    if (this.wsClient) {
+      // return await this.wsClient.waitImageMessage({ nonce, loading, prompt });
+    } else {
+      this.log(`await generate image`);
+      // const msg = await this.WaitMessage(prompt, loading);
+      // this.log(`image generated`, prompt, msg?.uri);
+      // return msg;
+    }
+  }
+
   // check ws enabled && connect
   private async getWsClient() {
     if (!this.config.Ws) {

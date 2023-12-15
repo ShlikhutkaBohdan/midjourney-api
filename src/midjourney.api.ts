@@ -82,6 +82,11 @@ export class MidjourneyApi extends Command {
     return this.safeIteractions(payload);
   }
 
+  async SwapId0Api(idName: string, image: DiscordImage, nonce: string = nextNonce()) {
+    const payload = await this.swapId0Payload(idName, image, nonce);
+    return this.safeIteractions(payload);
+  }
+
   async SwitchRemixApi(nonce: string = nextNonce()) {
     const payload = await this.PreferPayload(nonce);
     return this.safeIteractions(payload);
