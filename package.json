@@ -10,7 +10,10 @@
     "build": "tsc",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "example:imagine": "tsx ./examples/imagine-ws.ts"
+    "example:imagine": "tsx ./example/imagine-ws.ts",
+    "example:info": "tsx ./example/info.ts",
+    "example:settings": "tsx ./example/settings.ts",
+    "example:file-upload": "tsx ./example/file-upload.ts"
   },
   "files": [
     "libs/*",

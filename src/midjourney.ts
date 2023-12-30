@@ -15,6 +15,7 @@ import {
 } from "./utils";
 import { WsMessage } from "./discord.ws";
 import { faceSwap } from "./face.swap";
+import {DiscordImage} from "../libs";
 export class Midjourney extends MidjourneyMessage {
   public config: MJConfig;
   private wsClient?: WsMessage;
@@ -171,6 +172,18 @@ export class Midjourney extends MidjourneyMessage {
     }
     return wsClient.waitDescribe(nonce);
   }
+
+  async DescribeByDbImage(DcImage: DiscordImage){
+    const wsClient = await this.getWsClient();
+    const nonce = nextNonce();
+    this.log(`Describe`, DcImage);
+    const httpStatus = await this.MJApi.DescribeApi(DcImage, nonce);
+    if (httpStatus !== 204) {
+      throw new Error(`DescribeApi failed with status ${httpStatus}`);
+    }
+    return wsClient.waitDescribe(nonce);
+  }
+
   async DescribeByBlob(blob: Blob) {
     const wsClient = await this.getWsClient();
     const nonce = nextNonce();
@@ -381,6 +394,12 @@ export class Midjourney extends MidjourneyMessage {
       flags,
       loading,
     });
+  }
+
+  async UploadImageByBase64(base64File: string) {
+    const blob = await base64ToBlob(base64File as string);
+    const DcImage = await this.MJApi.UploadImageByBole(blob);
+    return DcImage
   }
 
   async FaceSwap(target: string, source: string) {
